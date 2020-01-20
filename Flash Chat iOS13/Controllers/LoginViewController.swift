@@ -7,14 +7,29 @@
 //
 
 import UIKit
+import Firebase
 
 class LoginViewController: UIViewController {
-
+    
     @IBOutlet weak var emailTextfield: UITextField!
     @IBOutlet weak var passwordTextfield: UITextField!
     
-
-    @IBAction func loginPressed(_ sender: UIButton) {
-    }
     
+    @IBAction func loginPressed(_ sender: UIButton) {
+        
+        if let email = emailTextfield.text, let password = passwordTextfield.text {
+            Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
+                if let e = error {
+                    let alert = UIAlertController(title: "Hey You", message: e.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                } else {
+                    self.performSegue(withIdentifier: K.loginSegue, sender: self)
+                }
+                
+            }
+        }
+    }
 }
+
+//add the code to retrieve what the user typed into the email and password fields, then only call the sign in method if neither email or password is nil
